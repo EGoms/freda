@@ -23,7 +23,7 @@ class Team:
             self.load_from_file()
 
     def load_from_file(self):
-        with open(self.owner + ".csv", "r") as f:
+        with open("teams/" + self.owner + ".csv", "r") as f:
             reader = csv.reader(f)
             for row in reader:
                 if row[2] == 'True':
@@ -44,18 +44,21 @@ class Team:
         
     def get_roster(self):
         print("Roster for {}".format(self.owner))
+        print()
         print("Players: ")
         for player in self.players:
             print(player)
+        print()
         print("Keepers: ")
         for keeper in self.keepers:
             print(keeper)
+        print()
         print("Prospects: ")
         for prospect in self.prospects:
             print(prospect)
             
     def write_to_file(self):
-        with open(self.owner + ".csv", "w") as f:
+        with open("teams/" + self.owner + ".csv", "w") as f:
             for player in self.players:
                 f.write(player.info_for_file() + "\n")
             for keeper in self.keepers:
