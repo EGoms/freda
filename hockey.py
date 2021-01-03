@@ -7,21 +7,32 @@ class League:
     def add_team(self, team):
         self.teams.append(team)
         
+    def get_team(self, owner):
+        for team in self.teams:
+            if team.get_owner() == owner:
+                return team
+            
     def show_league(self):
         for team in self.teams:
             team.get_roster()
             print()
 
 class Team:
-    def __init__(self, owner, players=None, keepers=None, prospects=None, load=False):
+    def __init__(self, owner, budget=20, players=None, keepers=None, prospects=None, load=False):
         self.owner = owner
         self.players = [] if players is None else players
         self.keepers = [] if keepers is None else keepers
         self.prospects = [] if prospects is None else prospects
+        self.budget = 350
+        self.trade_budget = budget
         
         if load:
             self.load_from_file()
 
+    def calculate_auction_budget(self):
+        keeper_cost = sum(keeper.get_cost() for keeper in self.keepers)
+        return self.budget - keeper_cost + self.trade_budget
+    
     def load_from_file(self):
         with open("teams/" + self.owner + ".csv", "r") as f:
             reader = csv.reader(f)
@@ -32,6 +43,9 @@ class Team:
                     self.prospects.append(Player(row[0], row[1], False, row[3], True))
                 else:
                     self.players.append(Player(row[0], row[1], False, row[3], False))
+    
+    def get_owner(self):
+        return self.owner
     
     def add_player(self, player):
         self.players.append(player)
@@ -76,6 +90,9 @@ class Player:
 
     def info_for_file(self):
         return "{0},{1},{2},{3},{4}".format(self.name, self.cost, self.keeper, self.contract_length, self.prospect)
+    
+    def get_cost(self):
+        return int(self.cost)
     
     def is_keeper(self):
         return self.keeper
