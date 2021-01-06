@@ -112,3 +112,12 @@ class Player:
             return "{0} is a prospect".format(self.name)
         else:
             return "{0} costs ${1}".format(self.name, self.cost)
+        
+class DraftPick:
+    def __init__(self, original_owner, round):
+        self.original_owner = original_owner
+        self.current_owner = original_owner
+        self.round = round
+    
+    def __repr__(self):
+        return "Round {0} pick belongs to {1}".format(self.round, self.current_owner)
